@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Split Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">💳 Expense Tracker </p>
+          <h1>The One With the Split 🧾</h1>
+        </div>
+        <div class="topbar-actions">
+          <button id="resetAllBtn" class="ghost-btn" type="button">Reset all</button>
+          <button id="downloadExcelBtn" class="primary-btn" type="button">Download Excel</button>
+        </div>
+      </header>
+
+      <main id="contentGrid" class="content-grid"></main>
+    </div>
+
+    <script>
+      const componentFiles = [
+        'components/trip-card.html',
+        'components/people-card.html',
+        'components/expense-card.html',
+        'components/summary-card.html',
+        'components/category-card.html',
+        'components/chart-card.html',
+        'components/table-card.html'
+      ];
+
+      const contentGrid = document.getElementById('contentGrid');
+
+      Promise.all(
+        componentFiles.map((file) => fetch(file).then((response) => response.text()))
+      )
+        .then((parts) => {
+          contentGrid.innerHTML = parts.join('');
+          const appScript = document.createElement('script');
+          appScript.src = 'scripts/app.js';
+          document.body.appendChild(appScript);
+        })
+        .catch((error) => {
+          console.error('Failed to load split calculator components:', error);
+          contentGrid.innerHTML = '<div class="empty-state">Unable to load the calculator sections.</div>';
+        });
+    </script>
+  </body>
+</html>
